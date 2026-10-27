@@ -24,9 +24,10 @@ const questions = [
     correct: 1,
     explanation: "4.89 million square kilometers. 489 million hectares. That's around half the area of the continent of Europe. (Source: FAO, 2025)",
     cutscene: {
-      title: "A forest holds a world.",
-      description: "A deer slips through the trees. Every patch of forest is part of a much bigger living landscape.",
-      focus: "deer",
+      title: "Forest loss, measured against Europe.",
+      description: "The forest lost since 1990 covers nearly half the area of Europe.",
+      src: "assets/q1_forest_loss.svg",
+      duration: 21_400,
     },
   },
   {
@@ -40,9 +41,10 @@ const questions = [
     correct: 1,
     explanation: "Forests provide food, shelter, and places to raise young. Losing that habitat can put pressure on the species that depend on it.",
     cutscene: {
-      title: "Every home has its neighbors.",
-      description: "A woodpecker searches the old trees for food and shelter—small details that make a forest a home.",
-      focus: "woodpecker",
+      title: "When a forest is cleared, animals lose their home.",
+      description: "Without food and shelter, animals that depend on the forest are put at risk.",
+      src: "assets/q2_deer_habitat.svg",
+      duration: 18_600,
     },
   },
   {
@@ -57,9 +59,10 @@ const questions = [
     correct: 3,
     explanation: "Over 30,000 species are classified as endangered or extinct in forest habitats that are being destroyed, including 22,000 plant species and 8,000 animal species. There are probably more threatened. (Source: IUCN Red List, 2026)",
     cutscene: {
-      title: "Life keeps watch.",
-      description: "From the forest floor to the canopy, countless species depend on connected, thriving habitats.",
-      focus: "owl",
+      title: "Species lost from forest habitats.",
+      description: "The animation follows five species whose forest homes have been lost.",
+      src: "assets/q3_extinct_species.svg",
+      duration: 33_400,
     },
   },
   {
@@ -73,9 +76,10 @@ const questions = [
     correct: 2,
     explanation: "In 2024, deforestation released 4.1 billion metric tons of CO2 into the atmosphere, accounting for 10% of global carbon dioxide emissions. (Source: Climate Council, 2026)",
     cutscene: {
-      title: "The forest breathes with us.",
-      description: "Trees take in carbon as they grow. Protecting forests helps keep this natural cycle alive.",
-      focus: "leaves",
+      title: "Deforestation releases carbon dioxide.",
+      description: "The animation compares emissions from deforestation with all other global carbon dioxide emissions.",
+      src: "assets/q4_co2_release.svg",
+      duration: 18_400,
     },
   },
   {
@@ -91,9 +95,10 @@ const questions = [
     correct: 0,
     explanation: "Beef production is the single largest driver of deforestation worldwide. Period. (NEEDS MORE EXPLANATION)",
     cutscene: {
-      title: "Small choices leave a trail.",
-      description: "What we grow, buy, and use can shape the pressures forests face around the world.",
-      focus: "woodpecker",
+      title: "Agriculture drives most deforestation.",
+      description: "The chart compares the main causes of global deforestation.",
+      src: "assets/q5_drivers_pie.svg",
+      duration: 27_000,
     },
   },
   {
@@ -109,9 +114,10 @@ const questions = [
     correct: 1,
     explanation: "Using resources thoughtfully and choosing responsibly sourced products can help reduce pressure on forests.",
     cutscene: {
-      title: "A little care goes a long way.",
-      description: "Thoughtful choices help give forests and the life within them room to thrive.",
-      focus: "deer",
+      title: "Everyday choices can help forests.",
+      description: "The animation shows how choices about food and paper can help reduce pressure on forests.",
+      src: "assets/q6_everyday_choices.svg",
+      duration: 25_500,
     },
   },
 ];
@@ -129,7 +135,6 @@ const questionCount = document.querySelector("#question-count");
 const scoreCount = document.querySelector("#score-count");
 const answerList = document.querySelector("#answer-list");
 const feedback = document.querySelector("#feedback");
-const nextButton = document.querySelector("#next-question");
 const progressTrack = document.querySelector(".progress-track");
 const progressFill = document.querySelector("#progress-fill");
 const resultTitle = document.querySelector("#result-title");
@@ -138,13 +143,16 @@ const cutscene = document.querySelector("#cutscene");
 const cutsceneScene = document.querySelector("#cutscene-scene");
 const cutsceneTitle = document.querySelector("#cutscene-title");
 const cutsceneDescription = document.querySelector("#cutscene-description");
+const cutsceneProgress = document.querySelector("#cutscene-progress");
+const cutsceneProgressTrack = document.querySelector("#cutscene-progress-track");
 const continueButton = document.querySelector("#continue-quiz");
+const cutsceneError = document.querySelector("#cutscene-error");
 
 let currentQuestion = 0;
 let score = 0;
 let cutsceneTimer;
-
-const cutsceneDuration = 4200;
+const answerFeedbackDuration = 650;
+const finalFrameHold = 3000;
 
 function updateProgress(completed) {
   const progress = Math.min(completed, questions.length);
@@ -163,7 +171,6 @@ function renderQuestion() {
   answerList.replaceChildren();
   feedback.hidden = true;
   feedback.classList.remove("is-incorrect");
-  nextButton.hidden = true;
   updateProgress(currentQuestion);
 
   question.answers.forEach((answer, index) => {
@@ -194,16 +201,17 @@ function chooseAnswer(selectedIndex) {
   answerList.querySelectorAll("button").forEach((button, index) => {
     button.disabled = true;
     if (index === question.correct) button.classList.add("is-correct");
-    if (index === selectedIndex && !isCorrect) button.classList.add("is-incorrect");
+    if (index === selectedIndex) {
+      if (!isCorrect) button.classList.add("is-incorrect");
+      button.classList.add("is-flashing");
+    }
   });
 
   feedback.textContent = `${isCorrect ? "That’s right." : "Not quite."} ${question.explanation}`;
   feedback.classList.toggle("is-incorrect", !isCorrect);
   feedback.hidden = false;
-  nextButton.textContent = currentQuestion === questions.length - 1 ? "See your result" : "Next question";
   updateProgress(currentQuestion + 1);
-  nextButton.hidden = false;
-  nextButton.focus();
+  window.setTimeout(showCutscene, answerFeedbackDuration);
 }
 
 function showResults() {
@@ -228,33 +236,61 @@ function startQuiz() {
 }
 
 function showCutscene() {
-  const event = questions[currentQuestion].cutscene;
-  const forest = cover.querySelector(".forest-art").cloneNode(true);
+  const { cutscene: event, explanation, prompt } = questions[currentQuestion];
+  const animation = document.createElement("img");
 
   window.clearTimeout(cutsceneTimer);
-  forest.setAttribute("class", "forest-art");
-  cutsceneScene.replaceChildren(forest);
-  cutscene.className = `cutscene cutscene--${event.focus}`;
-  cutsceneTitle.textContent = event.title;
-  cutsceneDescription.textContent = event.description;
-  continueButton.textContent = currentQuestion === questions.length - 1
-    ? "See your results"
-    : "Continue to the next question";
+  cutscene.classList.remove("is-ready");
   continueButton.hidden = true;
+  cutsceneProgress.style.width = "0%";
+  cutsceneProgressTrack.setAttribute("aria-valuenow", "0");
+  animation.className = "cutscene-art";
+  animation.alt = `${prompt} ${explanation}`;
+  animation.addEventListener("load", () => {
+    if (cutscene.hidden || cutsceneScene.firstElementChild !== animation) return;
+    cutsceneProgress.style.setProperty("--cutscene-duration", `${event.duration}ms`);
+    void cutsceneProgress.offsetWidth;
+    cutsceneProgress.style.width = "100%";
+    cutsceneTimer = window.setTimeout(() => {
+      cutsceneProgressTrack.setAttribute("aria-valuenow", "100");
+      cutsceneProgressTrack.setAttribute("aria-valuetext", "Animation complete. Next question available.");
+      cutscene.classList.add("is-ready");
+      continueButton.hidden = false;
+    }, event.duration + finalFrameHold);
+  }, { once: true });
+  animation.addEventListener("error", () => {
+    if (cutscene.hidden || cutsceneScene.firstElementChild !== animation) return;
+    cutsceneError.textContent = "The animation could not be loaded.";
+    cutsceneError.hidden = false;
+    cutsceneTimer = window.setTimeout(() => {
+      cutscene.classList.add("is-ready");
+      continueButton.hidden = false;
+    }, finalFrameHold);
+  }, { once: true });
+  cutsceneScene.replaceChildren(animation);
+  cutsceneError.hidden = true;
+  cutsceneTitle.textContent = event.title;
+  cutsceneDescription.textContent = `${event.description} ${explanation}`;
+  cutsceneProgressTrack.setAttribute("aria-valuetext", `0 of ${event.duration / 1000} seconds`);
   quiz.hidden = true;
   cutscene.hidden = false;
   cutsceneTitle.focus();
+  animation.src = event.src;
+}
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    continueButton.hidden = false;
-    continueButton.focus();
+function advanceFromCutscene() {
+  window.clearTimeout(cutsceneTimer);
+  cutscene.hidden = true;
+  if (currentQuestion === questions.length - 1) {
+    quiz.hidden = false;
+    showResults();
     return;
   }
 
-  cutsceneTimer = window.setTimeout(() => {
-    continueButton.hidden = false;
-    continueButton.focus();
-  }, cutsceneDuration);
+  currentQuestion += 1;
+  quiz.hidden = false;
+  renderQuestion();
+  questionTitle.focus();
 }
 
 function returnToCover() {
@@ -268,22 +304,7 @@ function returnToCover() {
 startButton.addEventListener("click", startQuiz);
 restartButton.addEventListener("click", startQuiz);
 backButton.addEventListener("click", returnToCover);
-nextButton.addEventListener("click", () => {
-  showCutscene();
-});
-continueButton.addEventListener("click", () => {
-  cutscene.hidden = true;
-  if (currentQuestion === questions.length - 1) {
-    quiz.hidden = false;
-    showResults();
-    return;
-  }
-
-  currentQuestion += 1;
-  quiz.hidden = false;
-  renderQuestion();
-  questionTitle.focus();
-});
+continueButton.addEventListener("click", advanceFromCutscene);
 
 
 

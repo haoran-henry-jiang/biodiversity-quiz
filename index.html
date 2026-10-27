@@ -40,12 +40,12 @@ that should be included are:
           <p class="eyebrow"><span>01</span> TAKE THE QUIZ FOR A PRIZE </p>
           <h1 id="cover-title">Our forests are <em>disappearing.</em></h1>
           <p class="cover-description">
-            A journey through Jeju’s forests, the life they hold, and how we can help it thrive.
+            A quiz made by the Veterinary Society about deforestation. It takes aroud 3 minutes and contains 6 questions. There is a prize if all questions are answered correctly. You may have multiple tries.
           </p>
           <button class="start-button" id="start-quiz" type="button">
             Start the quiz <span aria-hidden="true">↗</span>
           </button>
-          <p class="cover-footnote"><span aria-hidden="true">◷</span> 5 questions <span class="footnote-dot">·</span> 2 minutes <span class="footnote-dot">·</span></p>
+          <p class="cover-footnote"><span aria-hidden="true">◷</span> 6 questions <span class="footnote-dot">·</span> 3 minutes <span class="footnote-dot">·</span></p>
         </div>
 
         <div class="scene" aria-hidden="true">
@@ -485,7 +485,6 @@ that should be included are:
           <h2 id="quiz-title" tabindex="-1"></h2>
           <div class="answer-list" id="answer-list"></div>
           <div class="feedback" id="feedback" aria-live="polite" hidden></div>
-          <button class="next-button" id="next-question" type="button" hidden>Next question <span aria-hidden="true">→</span></button>
         </div>
         <div class="result-view" id="result-view" hidden>
           <p class="question-kicker">FIELD NOTES COMPLETE</p>
@@ -495,18 +494,27 @@ that should be included are:
         </div>
       </section>
 
-      <section class="cutscene" id="cutscene" aria-labelledby="cutscene-title" aria-live="polite" hidden>
-        <div class="cutscene-scene" id="cutscene-scene" aria-hidden="true"></div>
-        <div class="cutscene-shade"></div>
-        <div class="cutscene-copy">
-          <p class="question-kicker">A MOMENT IN THE FOREST</p>
-          <h2 id="cutscene-title" tabindex="-1"></h2>
-          <p id="cutscene-description"></p>
-          <button class="start-button" id="continue-quiz" type="button" hidden>
-            Continue to the next question <span aria-hidden="true">→</span>
+      <section class="cutscene" id="cutscene" aria-labelledby="cutscene-title" hidden>
+        <div class="cutscene-scene" id="cutscene-scene"></div>
+        <div
+          class="cutscene-progress-track"
+          id="cutscene-progress-track"
+          role="progressbar"
+          aria-label="Animation progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span class="cutscene-progress" id="cutscene-progress"></span>
+        </div>
+        <div class="cutscene-copy" aria-live="polite">
+          <h2 id="cutscene-title" class="visually-hidden" tabindex="-1" aria-describedby="cutscene-description"></h2>
+          <p id="cutscene-description" class="visually-hidden"></p>
+          <p id="cutscene-error" class="visually-hidden" role="alert" hidden>The animation could not be loaded.</p>
+          <button class="cutscene-continue" id="continue-quiz" type="button" hidden>
+            Shall we follow the trail? <span aria-hidden="true">→</span>
           </button>
         </div>
-        <p class="cutscene-location">GOTJAWAL FOREST <span>·</span> JEJU ISLAND</p>
       </section>
     </main>
     <footer class="page-footer"><span>TAKE A CLOSER LOOK</span><span>JEJU ISLAND, SOUTH KOREA <span aria-hidden="true">↗</span></span></footer>
