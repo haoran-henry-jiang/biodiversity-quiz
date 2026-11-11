@@ -14,7 +14,7 @@ that should be included are:
 
 const questions = [
   {
-    kicker: "THE SCALE OF LOSS",
+    kicker: "SO MUCH LOSS! WHERE DID IT ALL GO?",
     prompt: "How much forest has disappeared over the past 35 years, compared to the total forest area in 1990?",
     answers: [
       "1 million square kilometers",
@@ -31,7 +31,7 @@ const questions = [
     },
   },
   {
-    kicker: "LOOK A LITTLE CLOSER",
+    kicker: "Imagine a giant came and knocked down your houses!",
     prompt: "When a forest is cleared, what can happen to the animals that live there?",
     answers: [
       "They can adapt to a new habitat",
@@ -48,7 +48,7 @@ const questions = [
     },
   },
   {
-    kicker: "FOLLOW THE FOOTPRINTS",
+    kicker: "MASS DISAPPEARANCE! The 6th Mass extinction event: the anthropocene.",
     prompt: "How many species have been critically endangered or gone extinct in forest habitats that have been destroyed?",
     answers: [
     "5,000 species",
@@ -66,7 +66,7 @@ const questions = [
     },
   },
   {
-    kicker: "BREATHE IN",
+    kicker: "Carbon dioxide sponges that get cut down...",
     prompt: "How much CO2 does deforestation release?",
     answers: [
       "69,000,000 metric tons",
@@ -83,7 +83,7 @@ const questions = [
     },
   },
   {
-    kicker: "WHICH CAUSES MOST DEFORESTATION?",
+    kicker: "WHICH IS RESPONSIBLE FOR THE MOST TREES CUT DOWN?",
     prompt: "Which industries are causing the most deforestation?",
     answers: [
       "Agriculture (livestock, soy, crops)",
@@ -102,7 +102,7 @@ const questions = [
     },
   },
   {
-    kicker: "MAKE A DIFFERENCE",
+    kicker: "You may be thinking, there's no way I can help! Well, you most definitely can.",
     prompt: "Which everyday choice can help forests? (please make this checkbox question so that students can select multiple answers)",
     answers: [
       "Waste more paper so demand goes up",
@@ -150,8 +150,11 @@ const cutsceneError = document.querySelector("#cutscene-error");
 
 let currentQuestion = 0;
 let score = 0;
+let answerTimer;
 let cutsceneTimer;
+let transitionTimer;
 const answerFeedbackDuration = 650;
+const leafTransitionDuration = 820;
 const finalFrameHold = 3000;
 
 function updateProgress(completed) {
@@ -164,6 +167,7 @@ function updateProgress(completed) {
 function renderQuestion() {
   const question = questions[currentQuestion];
 
+  quiz.classList.remove("is-transitioning");
   questionCount.textContent = `QUESTION ${String(currentQuestion + 1).padStart(2, "0")} / ${String(questions.length).padStart(2, "0")}`;
   scoreCount.textContent = `${score} ${score === 1 ? "POINT" : "POINTS"}`;
   questionKicker.textContent = question.kicker;
@@ -211,19 +215,25 @@ function chooseAnswer(selectedIndex) {
   feedback.classList.toggle("is-incorrect", !isCorrect);
   feedback.hidden = false;
   updateProgress(currentQuestion + 1);
-  window.setTimeout(showCutscene, answerFeedbackDuration);
+  answerTimer = window.setTimeout(() => {
+    quiz.classList.add("is-transitioning");
+    const transitionDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : leafTransitionDuration;
+    transitionTimer = window.setTimeout(showCutscene, transitionDuration);
+  }, answerFeedbackDuration);
 }
 
 function showResults() {
   questionView.hidden = true;
   resultView.hidden = false;
-  resultTitle.textContent = score === questions.length ? "A keen observer." : "Well explored.";
+  resultTitle.textContent = score === questions.length ? "A Wildlife Enthusiast!" : "Well explored.";
   resultCopy.textContent = `You got ${score} out of ${questions.length} questions right. Keep noticing the small things—every forest is full of connections worth protecting.`;
   restartButton.focus();
 }
 
 function startQuiz() {
+  window.clearTimeout(answerTimer);
   window.clearTimeout(cutsceneTimer);
+  window.clearTimeout(transitionTimer);
   currentQuestion = 0;
   score = 0;
   questionView.hidden = false;
@@ -279,7 +289,9 @@ function showCutscene() {
 }
 
 function advanceFromCutscene() {
+  window.clearTimeout(answerTimer);
   window.clearTimeout(cutsceneTimer);
+  window.clearTimeout(transitionTimer);
   cutscene.hidden = true;
   if (currentQuestion === questions.length - 1) {
     quiz.hidden = false;
@@ -294,7 +306,9 @@ function advanceFromCutscene() {
 }
 
 function returnToCover() {
+  window.clearTimeout(answerTimer);
   window.clearTimeout(cutsceneTimer);
+  window.clearTimeout(transitionTimer);
   cutscene.hidden = true;
   quiz.hidden = true;
   cover.hidden = false;

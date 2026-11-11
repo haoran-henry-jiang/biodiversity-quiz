@@ -29,9 +29,9 @@ that should be included are:
     <header class="site-header">
       <a class="brand" href="#" aria-label="Into the Forest home">
         <span class="brand-mark" aria-hidden="true">✳</span>
-        <span>FIELD NOTES <span class="brand-divider">/</span> JEJU</span>
+        <span>Veterinary Society<span class="brand-divider">/</span> NLCS Jeju </span>
       </a>
-      <span class="header-note"><span class="status-dot"></span> Why nature matters. </span>
+      <span class="header-note"><span class="status-dot"></span> We all depend on nature.</span>
     </header>
 
     <main>
@@ -469,28 +469,72 @@ that should be included are:
       </section>
 
       <section class="quiz-panel" id="quiz" aria-labelledby="quiz-title" hidden>
-        <div class="quiz-topline">
-          <p class="eyebrow"><span>✳</span> FOREST FIELD GUIDE</p>
-          <button class="text-button" id="back-home" type="button">← Back to the forest</button>
-        </div>
-        <div id="question-view">
-          <div class="progress-meta">
-            <span id="question-count">QUESTION 01 / 05</span>
-            <span id="score-count">0 POINTS</span>
+        <svg class="quiz-canopy" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <defs>
+            <path id="quiz-leaf" d="M0 0C18-27 53-30 72-2 53 24 20 28 0 0Z" />
+          </defs>
+          <g class="canopy-cluster canopy-top">
+            <use href="#quiz-leaf" x="35" y="-5" transform="rotate(18 35 -5) scale(1.7)" />
+            <use href="#quiz-leaf" x="148" y="38" transform="rotate(-22 148 38) scale(1.4)" />
+            <use href="#quiz-leaf" x="270" y="-18" transform="rotate(12 270 -18) scale(1.8)" />
+            <use href="#quiz-leaf" x="405" y="34" transform="rotate(-30 405 34) scale(1.6)" />
+            <use href="#quiz-leaf" x="560" y="-24" transform="rotate(24 560 -24) scale(1.8)" />
+            <use href="#quiz-leaf" x="710" y="32" transform="rotate(-12 710 32) scale(1.6)" />
+            <use href="#quiz-leaf" x="860" y="-14" transform="rotate(20 860 -14) scale(1.7)" />
+            <use href="#quiz-leaf" x="1015" y="28" transform="rotate(-24 1015 28) scale(1.5)" />
+            <use href="#quiz-leaf" x="1170" y="-26" transform="rotate(17 1170 -26) scale(1.8)" />
+            <use href="#quiz-leaf" x="1320" y="24" transform="rotate(-20 1320 24) scale(1.6)" />
+          </g>
+          <g class="canopy-cluster canopy-bottom">
+            <use href="#quiz-leaf" x="-10" y="830" transform="rotate(-15 -10 830) scale(1.8)" />
+            <use href="#quiz-leaf" x="150" y="866" transform="rotate(22 150 866) scale(1.5)" />
+            <use href="#quiz-leaf" x="310" y="820" transform="rotate(-24 310 820) scale(1.7)" />
+            <use href="#quiz-leaf" x="475" y="870" transform="rotate(18 475 870) scale(1.6)" />
+            <use href="#quiz-leaf" x="640" y="822" transform="rotate(-18 640 822) scale(1.8)" />
+            <use href="#quiz-leaf" x="810" y="870" transform="rotate(26 810 870) scale(1.5)" />
+            <use href="#quiz-leaf" x="970" y="820" transform="rotate(-22 970 820) scale(1.8)" />
+            <use href="#quiz-leaf" x="1135" y="866" transform="rotate(18 1135 866) scale(1.6)" />
+            <use href="#quiz-leaf" x="1300" y="822" transform="rotate(-20 1300 822) scale(1.8)" />
+          </g>
+          <g class="canopy-cluster canopy-left">
+            <use href="#quiz-leaf" x="-34" y="190" transform="rotate(-42 -34 190) scale(1.7)" />
+            <use href="#quiz-leaf" x="45" y="330" transform="rotate(28 45 330) scale(1.5)" />
+            <use href="#quiz-leaf" x="-26" y="470" transform="rotate(-32 -26 470) scale(1.8)" />
+            <use href="#quiz-leaf" x="38" y="610" transform="rotate(35 38 610) scale(1.6)" />
+            <use href="#quiz-leaf" x="-15" y="730" transform="rotate(-24 -15 730) scale(1.7)" />
+          </g>
+          <g class="canopy-cluster canopy-right">
+            <use href="#quiz-leaf" x="1370" y="185" transform="rotate(38 1370 185) scale(1.7)" />
+            <use href="#quiz-leaf" x="1305" y="330" transform="rotate(-30 1305 330) scale(1.6)" />
+            <use href="#quiz-leaf" x="1378" y="470" transform="rotate(28 1378 470) scale(1.8)" />
+            <use href="#quiz-leaf" x="1315" y="615" transform="rotate(-36 1315 615) scale(1.5)" />
+            <use href="#quiz-leaf" x="1370" y="745" transform="rotate(24 1370 745) scale(1.8)" />
+          </g>
+        </svg>
+        <div class="quiz-content">
+          <div class="quiz-topline">
+            <p class="eyebrow"><span>✳</span> NLCS VETSOC</p>
+            <button class="text-button" id="back-home" type="button">← Back to home page</button>
           </div>
-          <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
-            <span id="progress-fill"></span>
+          <div id="question-view">
+            <div class="progress-meta">
+              <span id="question-count">QUESTION 01 / 06</span>
+              <span id="score-count">0 POINTS</span>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0">
+              <span id="progress-fill"></span>
+            </div>
+            <p class="question-kicker" id="question-kicker"></p>
+            <h2 id="quiz-title" tabindex="-1"></h2>
+            <div class="answer-list" id="answer-list"></div>
+            <div class="feedback" id="feedback" aria-live="polite" hidden></div>
           </div>
-          <p class="question-kicker" id="question-kicker">NOTICE THE DETAILS</p>
-          <h2 id="quiz-title" tabindex="-1"></h2>
-          <div class="answer-list" id="answer-list"></div>
-          <div class="feedback" id="feedback" aria-live="polite" hidden></div>
-        </div>
-        <div class="result-view" id="result-view" hidden>
-          <p class="question-kicker">FIELD NOTES COMPLETE</p>
-          <h2 id="result-title">Well explored.</h2>
-          <p class="result-copy" id="result-copy"></p>
-          <button class="start-button" id="restart-quiz" type="button">Take the quiz again <span aria-hidden="true">↗</span></button>
+          <div class="result-view" id="result-view" hidden>
+            <p class="question-kicker">You finished the quiz!</p>
+            <h2 id="result-title">If you got all 6 correct, tell the students running the stall, and you might get a prize!</h2>
+            <p class="result-copy" id="result-copy"></p>
+            <button class="start-button" id="restart-quiz" type="button">Take the quiz again <span aria-hidden="true">↗</span></button>
+          </div>
         </div>
       </section>
 
@@ -512,7 +556,7 @@ that should be included are:
           <p id="cutscene-description" class="visually-hidden"></p>
           <p id="cutscene-error" class="visually-hidden" role="alert" hidden>The animation could not be loaded.</p>
           <button class="cutscene-continue" id="continue-quiz" type="button" hidden>
-            Shall we follow the trail? <span aria-hidden="true">→</span>
+            Continue to the next scene? <span aria-hidden="true">→</span>
           </button>
         </div>
       </section>
