@@ -14,8 +14,8 @@ that should be included are:
 
 const questions = [
   {
-    kicker: "SO MUCH LOSS! WHERE DID IT ALL GO?",
     prompt: "How much forest has disappeared over the past 35 years, compared to the total forest area in 1990?",
+    emphasis: "disappeared",
     answers: [
       "1 million square kilometers",
       "5 million square kilometers",
@@ -31,8 +31,8 @@ const questions = [
     },
   },
   {
-    kicker: "Imagine a giant came and knocked down your houses!",
     prompt: "When a forest is cleared, what can happen to the animals that live there?",
+    emphasis: "what can happen",
     answers: [
       "They can adapt to a new habitat",
       "They can lose the food and shelter they depend on",
@@ -48,8 +48,8 @@ const questions = [
     },
   },
   {
-    kicker: "MASS DISAPPEARANCE! The 6th Mass extinction event: the anthropocene.",
-    prompt: "How many species have been critically endangered or gone extinct in forest habitats that have been destroyed?",
+    prompt: "How many species have been critically endangered or gone extinct in forest habitats that have been destroyed, as of 2026?",
+    emphasis: "critically endangered or gone extinct",
     answers: [
     "5,000 species",
       "Over 10,000 species",
@@ -66,8 +66,8 @@ const questions = [
     },
   },
   {
-    kicker: "Carbon dioxide sponges that get cut down...",
-    prompt: "How much CO2 does deforestation release?",
+    prompt: "How much CO2 does deforestation release annually?",
+    emphasis: "CO2",
     answers: [
       "69,000,000 metric tons",
       "1,069,000,000 metric tons",
@@ -83,8 +83,8 @@ const questions = [
     },
   },
   {
-    kicker: "WHICH IS RESPONSIBLE FOR THE MOST TREES CUT DOWN?",
-    prompt: "Which industries are causing the most deforestation?",
+    prompt: "Which industries are causing the most deforestation, as of 2026?",
+    emphasis: "most deforestation",
     answers: [
       "Agriculture (livestock, soy, crops)",
       "Logging (timber, paper, etc.)",
@@ -102,8 +102,8 @@ const questions = [
     },
   },
   {
-    kicker: "You may be thinking, there's no way I can help! Well, you most definitely can.",
     prompt: "Which everyday choices can help forests? Select all that apply.",
+    emphasis: "everyday choices",
     answers: [
       "Waste more paper so demand goes up",
       "Choose responsibly sourced products and reuse paper often",
@@ -127,11 +127,10 @@ const cover = document.querySelector("#cover");
 const quiz = document.querySelector("#quiz");
 const startButton = document.querySelector("#start-quiz");
 const backButton = document.querySelector("#back-home");
-const restartButton = document.querySelector("#restart-quiz");
+const resultsBackButton = document.querySelector("#results-back-home");
 const questionView = document.querySelector("#question-view");
 const resultView = document.querySelector("#result-view");
 const questionTitle = document.querySelector("#quiz-title");
-const questionKicker = document.querySelector("#question-kicker");
 const questionCount = document.querySelector("#question-count");
 const scoreCount = document.querySelector("#score-count");
 const answerList = document.querySelector("#answer-list");
@@ -154,9 +153,9 @@ let score = 0;
 let answerTimer;
 let cutsceneTimer;
 let transitionTimer;
-const answerFeedbackDuration = 650;
-const leafTransitionDuration = 820;
-const finalFrameHold = 3000;
+const answerFeedbackDuration = 3000;
+const leafTransitionDuration = 620;
+const finalFrameHold = 2000;
 
 function updateProgress(completed) {
   const progress = Math.min(completed, questions.length);
@@ -174,8 +173,19 @@ function renderQuestion() {
   quiz.classList.remove("is-transitioning");
   questionCount.textContent = `QUESTION ${String(currentQuestion + 1).padStart(2, "0")} / ${String(questions.length).padStart(2, "0")}`;
   scoreCount.textContent = `${score} ${score === 1 ? "POINT" : "POINTS"}`;
-  questionKicker.textContent = question.kicker;
-  questionTitle.textContent = question.prompt;
+  const emphasisStart = question.prompt.indexOf(question.emphasis);
+  if (emphasisStart === -1) {
+    throw new Error(`Question emphasis phrase not found: ${question.emphasis}`);
+  }
+  const emphasisEnd = emphasisStart + question.emphasis.length;
+  const emphasizedText = document.createElement("span");
+  emphasizedText.className = "question-text-emphasis";
+  emphasizedText.textContent = question.emphasis;
+  questionTitle.replaceChildren(
+    document.createTextNode(question.prompt.slice(0, emphasisStart)),
+    emphasizedText,
+    document.createTextNode(question.prompt.slice(emphasisEnd)),
+  );
   answerList.replaceChildren();
   feedback.hidden = true;
   feedback.classList.remove("is-incorrect");
@@ -261,7 +271,7 @@ function showResults() {
   resultView.hidden = false;
   resultTitle.textContent = score === questions.length ? "A Wildlife Enthusiast!" : "Well explored.";
   resultCopy.textContent = `You got ${score} out of ${questions.length} questions right. Keep noticing the small things—every forest is full of connections worth protecting.`;
-  restartButton.focus();
+  resultsBackButton.focus();
 }
 
 function startQuiz() {
@@ -350,8 +360,8 @@ function returnToCover() {
 }
 
 startButton.addEventListener("click", startQuiz);
-restartButton.addEventListener("click", startQuiz);
 backButton.addEventListener("click", returnToCover);
+resultsBackButton.addEventListener("click", returnToCover);
 continueButton.addEventListener("click", advanceFromCutscene);
 
 
