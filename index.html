@@ -21,6 +21,9 @@ that should be included are:
       content="Step into a Jeju forest and discover why biodiversity matters."
     />
     <meta name="theme-color" content="#f4f0e5" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Redaction+50:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <title>How Much Forest Has Disappeared?</title>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
@@ -524,8 +527,7 @@ that should be included are:
             <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0">
               <span id="progress-fill"></span>
             </div>
-            <p class="question-kicker" id="question-kicker"></p>
-            <h2 id="quiz-title" tabindex="-1"></h2>
+            <h2 id="quiz-title" class="question-text-normal" tabindex="-1"></h2>
             <div class="answer-list" id="answer-list"></div>
             <div class="feedback" id="feedback" aria-live="polite" hidden></div>
           </div>
@@ -533,7 +535,7 @@ that should be included are:
             <p class="question-kicker">You finished the quiz!</p>
             <h2 id="result-title">If you got all 6 correct, tell the students running the stall, and you might get a prize!</h2>
             <p class="result-copy" id="result-copy"></p>
-            <button class="start-button" id="restart-quiz" type="button">Take the quiz again <span aria-hidden="true">↗</span></button>
+            <button class="text-button" id="results-back-home" type="button">← Back to home page</button>
           </div>
         </div>
       </section>
