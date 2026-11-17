@@ -146,16 +146,19 @@ const cutsceneDescription = document.querySelector("#cutscene-description");
 const cutsceneProgress = document.querySelector("#cutscene-progress");
 const cutsceneProgressTrack = document.querySelector("#cutscene-progress-track");
 const continueButton = document.querySelector("#continue-quiz");
+const skipButton = document.querySelector("#skip-cutscene");
 const cutsceneError = document.querySelector("#cutscene-error");
 
 let currentQuestion = 0;
 let score = 0;
 let answerTimer;
 let cutsceneTimer;
+let skipButtonTimer;
 let transitionTimer;
 const answerFeedbackDuration = 650;
 const leafTransitionDuration = 820;
 const finalFrameHold = 3000;
+const skipButtonDelay = 3000;
 
 function updateProgress(completed) {
   const progress = Math.min(completed, questions.length);
@@ -233,6 +236,7 @@ function showResults() {
 function startQuiz() {
   window.clearTimeout(answerTimer);
   window.clearTimeout(cutsceneTimer);
+  window.clearTimeout(skipButtonTimer);
   window.clearTimeout(transitionTimer);
   currentQuestion = 0;
   score = 0;
@@ -250,8 +254,16 @@ function showCutscene() {
   const animation = document.createElement("img");
 
   window.clearTimeout(cutsceneTimer);
+  window.clearTimeout(skipButtonTimer);
   cutscene.classList.remove("is-ready");
   continueButton.hidden = true;
+  skipButton.hidden = true;
+  skipButton.classList.remove("is-visible");
+  skipButtonTimer = window.setTimeout(() => {
+    if (cutscene.hidden) return;
+    skipButton.hidden = false;
+    skipButton.classList.add("is-visible");
+  }, skipButtonDelay);
   cutsceneProgress.style.width = "0%";
   cutsceneProgressTrack.setAttribute("aria-valuenow", "0");
   animation.className = "cutscene-art";
@@ -291,6 +303,7 @@ function showCutscene() {
 function advanceFromCutscene() {
   window.clearTimeout(answerTimer);
   window.clearTimeout(cutsceneTimer);
+  window.clearTimeout(skipButtonTimer);
   window.clearTimeout(transitionTimer);
   cutscene.hidden = true;
   if (currentQuestion === questions.length - 1) {
@@ -308,6 +321,7 @@ function advanceFromCutscene() {
 function returnToCover() {
   window.clearTimeout(answerTimer);
   window.clearTimeout(cutsceneTimer);
+  window.clearTimeout(skipButtonTimer);
   window.clearTimeout(transitionTimer);
   cutscene.hidden = true;
   quiz.hidden = true;
@@ -319,6 +333,7 @@ startButton.addEventListener("click", startQuiz);
 restartButton.addEventListener("click", startQuiz);
 backButton.addEventListener("click", returnToCover);
 continueButton.addEventListener("click", advanceFromCutscene);
+skipButton.addEventListener("click", advanceFromCutscene);
 
 
 

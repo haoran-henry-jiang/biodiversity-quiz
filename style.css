@@ -453,6 +453,17 @@ button { -webkit-tap-highlight-color: transparent; }
   opacity: .78;
 }
 
+.cutscene-skip {
+  position: absolute;
+  z-index: 3;
+  top: 18px;
+  right: 18px;
+}
+
+.cutscene-skip.is-visible {
+  opacity: .78;
+}
+
 .cutscene-continue:hover,
 .cutscene-continue:focus-visible {
   color: #d7efff;
@@ -561,6 +572,7 @@ button { -webkit-tap-highlight-color: transparent; }
   .text-button { font-size: 11px; }
   .question-kicker { margin-top: 42px; }
   .cutscene-copy { right: 12px; bottom: 24px; left: 12px; }
+  .cutscene-skip { top: 12px; right: 12px; }
 }
 
 @media (max-width: 390px) {
