@@ -480,7 +480,7 @@ button { -webkit-tap-highlight-color: transparent; }
 }
 
 .cutscene.is-ready .cutscene-continue {
-  opacity: .96;
+  opacity: .78;
 }
 
 .cutscene-skip {
@@ -600,7 +600,8 @@ button { -webkit-tap-highlight-color: transparent; }
   .quiz-topline { align-items: flex-start; margin-bottom: 48px; }
   .quiz-topline .eyebrow { max-width: 130px; line-height: 1.5; }
   .text-button { font-size: 11px; }
-  .cutscene-copy { padding: 0 12px; }
+  .question-kicker { margin-top: 42px; }
+  .cutscene-copy { right: 12px; bottom: 24px; left: 12px; }
   .cutscene-skip { top: 12px; right: 12px; }
 }
 
